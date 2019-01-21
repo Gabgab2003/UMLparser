@@ -18,16 +18,28 @@ public class Generator {
         //finished parsing and converting the string
         for(int i=1;i<umlArr.length;i++) {
             if(umlArr[i].trim().equals("")) continue;
+            String access;
             switch(umlArr[i].charAt(0)) {
                 case '+':
+                    access = "public";
                     break;
                 case '-':
+                    access = "private";
                     break;
                 case '#':
+                    access = "protected";
                     break;
                 default:
-                    continue;
+                    access = "";
             }
+            int func = umlArr[i].indexOf("(");
+            if(func != -1) {
+                //is function
+                int funcEnd = umlArr[i].lastIndexOf(")");
+            } else {
+                //is attribute
+            }
+
         }
         return umlClass;
     }
