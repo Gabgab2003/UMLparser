@@ -9,10 +9,12 @@ public class Test {
                 "- temperatur : int // aktuelle Temperatur\n" +
                 "+ Thermometer()\n" +
                 "+ aendereTemperatur(neueTemperatur : int) : boolean // simuliert eine Temperaturänderung\n" +
-                "+ getTemperatur( ) : int // aktuell angezeigte Temperatur\n" +
+                "+ getTemperatur(neueTemperatur : int, zweiteTemperatur : boolean) : int // aktuell angezeigte Temperatur\n" +
                 "+ getBisherigesMinimum( ) : int\n" +
                 "+ getBisherigesMaximum( ) : int\n" +
                 "+ resetMinMax( )\n" +
                 "+ printInfo( )");
+
+        umlc.print();
     }
 }
