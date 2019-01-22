@@ -65,26 +65,25 @@ public class Generator {
                     type = "void";
                 }
                 String[] argsStr = umlArr[i].substring(methodStart + 1, methodEnd).split(",");
-                if(!(argsStr.length==1 && argsStr[0].equals(""))) {
+                if (!(argsStr.length == 1 && argsStr[0].equals(""))) {
                     args = new Attribute[argsStr.length];
                     for (int a = 0; a < argsStr.length; a++) {
                         String[] argSplit = argsStr[a].split(":");
                         String argName = argSplit[0];
                         String argType = argSplit[1];
                         args[a] = new Attribute(argName, argType);
-
-                        if(name.equals(umlClass.getName())) {
-                            type = "constructor";
-                        }
-                        methods[methodIterate] = new Method(name, args, type, access);
-                        if (comments[i] != null) {
-                            methods[methodIterate++].setComment(comments[i]);
-                        } else {
-                            methodIterate++;
-                        }
+                    }
+                    if (name.equals(umlClass.getName())) {
+                        type = "constructor";
+                    }
+                    methods[methodIterate] = new Method(name, args, type, access);
+                    if (comments[i] != null) {
+                        methods[methodIterate++].setComment(comments[i]);
+                    } else {
+                        methodIterate++;
                     }
                 } else {
-                    if(name.equals(umlClass.getName())) {
+                    if (name.equals(umlClass.getName())) {
                         type = "constructor";
                     }
                     methods[methodIterate] = new Method(name, new Attribute[0], type, access);
@@ -95,37 +94,37 @@ public class Generator {
                     }
                 }
             } else {
-                    //is attribute
-                    String name, type, access;
-                    int offset = 1;
+                //is attribute
+                String name, type, access;
+                int offset = 1;
 
-                    switch (umlArr[i].charAt(0)) {
-                        case '+':
-                            access = "public";
-                            break;
-                        case '-':
-                            access = "private";
-                            break;
-                        case '#':
-                            access = "protected";
-                        default:
-                            access = "";
-                            offset = 0;
-                            break;
-                    }
-                    name = umlArr[i].substring(offset, umlArr[i].indexOf(":"));
-                    type = umlArr[i].substring(umlArr[i].indexOf(":") + 1);
+                switch (umlArr[i].charAt(0)) {
+                    case '+':
+                        access = "public";
+                        break;
+                    case '-':
+                        access = "private";
+                        break;
+                    case '#':
+                        access = "protected";
+                    default:
+                        access = "";
+                        offset = 0;
+                        break;
+                }
+                name = umlArr[i].substring(offset, umlArr[i].indexOf(":"));
+                type = umlArr[i].substring(umlArr[i].indexOf(":") + 1);
 
-                    attributes[attributeIterate] = new Attribute(name, type, access);
-                    if (comments[i] != null) {
-                        attributes[attributeIterate++].setComment(comments[i]);
-                    } else {
-                        attributeIterate++;
-                    }
+                attributes[attributeIterate] = new Attribute(name, type, access);
+                if (comments[i] != null) {
+                    attributes[attributeIterate++].setComment(comments[i]);
+                } else {
+                    attributeIterate++;
                 }
             }
-            umlClass.setAttributes(attributes);
-            umlClass.setMethods(methods);
-            return umlClass;
         }
+        umlClass.setAttributes(attributes);
+        umlClass.setMethods(methods);
+        return umlClass;
     }
+}

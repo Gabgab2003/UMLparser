@@ -2,6 +2,7 @@ public class UMLClass {
     private String name;
     private Attribute[] attributes = new Attribute[0];
     private Method[] methods = new Method[0];
+    private Method[] construcors = new Method[0];
     UMLClass(String name, Attribute[] attributes, Method[] methods) {
         this.name = name;
         this.attributes = attributes;
