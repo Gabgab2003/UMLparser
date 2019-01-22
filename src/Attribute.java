@@ -3,6 +3,7 @@ public class Attribute {
     private String type = "";
     private String access = "";
     private String comment = "";
+    private String defaultLiteral = "";
     Attribute(String name, String type) {
         this.name = name;
         this.type = type;
@@ -11,6 +12,16 @@ public class Attribute {
         this.name = name;
         this.type = type;
         this.access = access;
+    }
+    Attribute(String name, String type, String access, String defaultLiteral) {
+        this.name = name;
+        this.type = type;
+        this.access = access;
+        this.defaultLiteral = defaultLiteral;
+    }
+
+    public String getDefaultLiteral() {
+        return defaultLiteral;
     }
 
     public String getName() {

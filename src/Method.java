@@ -8,7 +8,6 @@ public class Method {
         this.name = name;
         this.args = args;
         this.type = type;
-        this.access = "";
     }
     Method(String name, Attribute[] args, String returnType, String access) {
         this.name = name;

@@ -1,6 +1,6 @@
 import java.io.*;
 
-public class Generator {
+public class Parser {
     public UMLClass parse(String umlStr) {
         UMLClass umlClass = new UMLClass();
         String[] umlArr = umlStr.trim().split("(\\r\\n|\\r|\\n)");
@@ -19,9 +19,13 @@ public class Generator {
         //finished parsing and converting the string
         int sumOfMethods = 0;
         int sumOfAttributes = 0;
+        int sumOfConstructors = 0;
         for (int i = 1; i < umlArr.length; i++) {
             if (umlArr[i].trim().equals("")) continue;
-            if (umlArr[i].contains("(")) {
+            if (umlArr[i].contains("(") && umlArr[i].substring(1, umlArr[i].indexOf("(")).equals(umlClass.getName())) {
+                //is constructor
+                sumOfConstructors++;
+            } else if (umlArr[i].contains("(")) {
                 //is function
                 sumOfMethods++;
             } else {
@@ -29,35 +33,74 @@ public class Generator {
                 sumOfAttributes++;
             }
         }
+        //init method and attrib array
         Method[] methods = new Method[sumOfMethods];
         Attribute[] attributes = new Attribute[sumOfAttributes];
+        Method[] constructors = new Method[sumOfConstructors];
+
         int methodIterate = 0;
         int attributeIterate = 0;
+        int constructorIterate = 0;
+        //iter second time
         for (int i = 1; i < umlArr.length; i++) {
             if (umlArr[i].trim().equals("")) continue;
+            String access;
+            int offset = 1;
+            switch (umlArr[i].charAt(0)) {
+                case '+':
+                    access = "public";
+                    break;
+                case '-':
+                    access = "private";
+                    break;
+                case '#':
+                    access = "protected";
+                default:
+                    access = "";
+                    offset = 0;
+                    break;
+            }
+
             int methodStart = umlArr[i].indexOf("(");
-            if (methodStart != -1) {
+            if(methodStart != -1 && umlArr[i].substring(1, methodStart).equals(umlClass.getName())) {
+                //is constructor
+                int constructorEnd = umlArr[i].lastIndexOf(")");
+
+                String name, type;
+                Attribute[] args;
+                name = umlArr[i].substring(offset, methodStart);
+
+                String[] argsStr = umlArr[i].substring(methodStart + 1, constructorEnd).split(",");
+                if (!(argsStr.length == 1 && argsStr[0].equals(""))) {
+                    args = new Attribute[argsStr.length];
+                    for (int a = 0; a < argsStr.length; a++) {
+                        String[] argSplit = argsStr[a].split(":");
+                        String argName = argSplit[0];
+                        String argType = argSplit[1];
+                        args[a] = new Attribute(argName, argType);
+                    }
+                    constructors[constructorIterate] = new Method(name, args, "");
+                    if (comments[i] != null) {
+                        constructors[constructorIterate++].setComment(comments[i]);
+                    } else {
+                        constructorIterate++;
+                    }
+                } else {
+                    constructors[constructorIterate] = new Method(name, new Attribute[0], "", "");
+                    if (comments[i] != null) {
+                        methods[constructorIterate++].setComment(comments[i]);
+                    } else {
+                        constructorIterate++;
+                    }
+                }
+
+            } else if (methodStart != -1) {
                 //is method
                 int methodEnd = umlArr[i].lastIndexOf(")");
-                int offset = 1;
 
-                String name, type, access;
+                String name, type;
                 Attribute[] args;
 
-                switch (umlArr[i].charAt(0)) {
-                    case '+':
-                        access = "public";
-                        break;
-                    case '-':
-                        access = "private";
-                        break;
-                    case '#':
-                        access = "protected";
-                    default:
-                        access = "";
-                        offset = 0;
-                        break;
-                }
                 name = umlArr[i].substring(offset, methodStart);
                 if (umlArr[i].substring(methodEnd).contains(":")) {
                     type = umlArr[i].substring(methodEnd + 2);
@@ -73,9 +116,6 @@ public class Generator {
                         String argType = argSplit[1];
                         args[a] = new Attribute(argName, argType);
                     }
-                    if (name.equals(umlClass.getName())) {
-                        type = "constructor";
-                    }
                     methods[methodIterate] = new Method(name, args, type, access);
                     if (comments[i] != null) {
                         methods[methodIterate++].setComment(comments[i]);
@@ -83,9 +123,6 @@ public class Generator {
                         methodIterate++;
                     }
                 } else {
-                    if (name.equals(umlClass.getName())) {
-                        type = "constructor";
-                    }
                     methods[methodIterate] = new Method(name, new Attribute[0], type, access);
                     if (comments[i] != null) {
                         methods[methodIterate++].setComment(comments[i]);
@@ -95,27 +132,17 @@ public class Generator {
                 }
             } else {
                 //is attribute
-                String name, type, access;
-                int offset = 1;
+                String name, type, tempType, defaultLiteral = "";
 
-                switch (umlArr[i].charAt(0)) {
-                    case '+':
-                        access = "public";
-                        break;
-                    case '-':
-                        access = "private";
-                        break;
-                    case '#':
-                        access = "protected";
-                    default:
-                        access = "";
-                        offset = 0;
-                        break;
-                }
                 name = umlArr[i].substring(offset, umlArr[i].indexOf(":"));
-                type = umlArr[i].substring(umlArr[i].indexOf(":") + 1);
+                tempType = umlArr[i].substring(umlArr[i].indexOf(":") + 1);
 
-                attributes[attributeIterate] = new Attribute(name, type, access);
+                String[]  typeAndLiteral = tempType.split("=");
+                type = typeAndLiteral[0];
+                if(typeAndLiteral.length > 1) {
+                    defaultLiteral=typeAndLiteral[1];
+                }
+                attributes[attributeIterate] = new Attribute(name, type, access, defaultLiteral);
                 if (comments[i] != null) {
                     attributes[attributeIterate++].setComment(comments[i]);
                 } else {
@@ -125,6 +152,7 @@ public class Generator {
         }
         umlClass.setAttributes(attributes);
         umlClass.setMethods(methods);
+        umlClass.setConstrucors(constructors);
         return umlClass;
     }
 }

@@ -34,12 +34,29 @@ public class UMLClass {
         this.methods = methods;
     }
 
+    public void setConstrucors(Method[] construcors) {
+        this.construcors = construcors;
+    }
+
     public void print() {
         StringBuilder a = new StringBuilder();
         a.append("Name: ").append(name).append(System.lineSeparator()).append(System.lineSeparator());
         for(Attribute attrib: attributes) {
             if(attrib!=null) {
-                a.append(attrib.getType()).append(" ").append(attrib.getName()).append(System.lineSeparator());
+                a.append(attrib.getType()).append(" ").append(attrib.getName());
+                if(!(attrib.getDefaultLiteral().equals(""))) {
+                    a.append("=").append(attrib.getDefaultLiteral());
+                }
+                a.append(System.lineSeparator());
+            }
+        }
+        a.append(System.lineSeparator());
+        for(Method constructor: construcors) {
+            if(constructor!=null) {
+                a.append(constructor.getName()).append(System.lineSeparator());
+                for(Attribute arg: constructor.getArgs()) {
+                    a.append("\t").append(arg.getType()).append(" ").append(arg.getName()).append(System.lineSeparator());
+                }
             }
         }
         a.append(System.lineSeparator());
@@ -52,5 +69,51 @@ public class UMLClass {
             }
         }
         System.out.println(a);
+    }
+
+    public String toJavaCode() {
+        StringBuilder a = new StringBuilder();
+        String softtabstop = "    ";
+        a.append("class ").append(name).append(" {").append(System.lineSeparator());
+        for(Attribute attrib: attributes) {
+            if(attrib!=null) {
+                a.append(softtabstop);
+                a.append(attrib.getType()).append(" ").append(attrib.getName());
+                if(!(attrib.getDefaultLiteral().equals(""))) {
+                    a.append("=").append(attrib.getDefaultLiteral());
+                }
+                a.append(";").append(System.lineSeparator());
+            }
+        }
+        a.append(System.lineSeparator());
+
+        for(Method constructor: construcors) {
+            if(constructor!=null) {
+                a.append(softtabstop);
+                a.append(constructor.getName()).append("(");
+                for(int i=0;i<constructor.getArgs().length;i++) {
+                    a.append(constructor.getArgs()[0].getType()).append(" ").append(constructor.getArgs()[0].getName());
+                    if(i < constructor.getArgs().length-1) {
+                        a.append(", ");
+                    }
+                }
+                a.append(") {").append(System.lineSeparator()).append(softtabstop).append("}").append(System.lineSeparator());
+            }
+        }
+        a.append(System.lineSeparator());
+        for(Method method: methods) {
+            if(method!=null) {
+                a.append(softtabstop).append(method.getType()).append(" ").append(method.getName()).append("(");
+                for(int i=0;i<method.getArgs().length;i++) {
+                    a.append(method.getArgs()[i].getType()).append(" ").append(method.getArgs()[i].getName());
+                    if(i < method.getArgs().length-1) {
+                        a.append(", ");
+                    }
+                }
+                a.append(") {").append(System.lineSeparator()).append(softtabstop).append("}").append(System.lineSeparator());
+            }
+        }
+        a.append("}");
+        return a.toString();
     }
 }
