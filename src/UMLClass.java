@@ -78,7 +78,7 @@ public class UMLClass {
         for(Attribute attrib: attributes) {
             if(attrib!=null) {
                 a.append(softtabstop);
-                a.append(attrib.getType()).append(" ").append(attrib.getName());
+                a.append(attrib.getAccess()).append(" ").append(attrib.getType()).append(" ").append(attrib.getName());
                 if(!(attrib.getDefaultLiteral().equals(""))) {
                     a.append("=").append(attrib.getDefaultLiteral());
                 }
@@ -90,7 +90,7 @@ public class UMLClass {
         for(Method constructor: construcors) {
             if(constructor!=null) {
                 a.append(softtabstop);
-                a.append(constructor.getName()).append("(");
+                a.append(constructor.getAccess()).append(" ").append(constructor.getName()).append("(");
                 for(int i=0;i<constructor.getArgs().length;i++) {
                     a.append(constructor.getArgs()[0].getType()).append(" ").append(constructor.getArgs()[0].getName());
                     if(i < constructor.getArgs().length-1) {
@@ -103,7 +103,7 @@ public class UMLClass {
         a.append(System.lineSeparator());
         for(Method method: methods) {
             if(method!=null) {
-                a.append(softtabstop).append(method.getType()).append(" ").append(method.getName()).append("(");
+                a.append(softtabstop).append(method.getAccess()).append(" ").append(method.getType()).append(" ").append(method.getName()).append("(");
                 for(int i=0;i<method.getArgs().length;i++) {
                     a.append(method.getArgs()[i].getType()).append(" ").append(method.getArgs()[i].getName());
                     if(i < method.getArgs().length-1) {

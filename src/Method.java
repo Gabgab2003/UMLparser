@@ -31,4 +31,8 @@ public class Method {
     public String getType() {
         return type;
     }
+
+    public String getAccess() {
+        return access;
+    }
 }

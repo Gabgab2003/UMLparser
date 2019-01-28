@@ -79,14 +79,14 @@ public class Parser {
                         String argType = argSplit[1];
                         args[a] = new Attribute(argName, argType);
                     }
-                    constructors[constructorIterate] = new Method(name, args, "");
+                    constructors[constructorIterate] = new Method(name, args, access);
                     if (comments[i] != null) {
                         constructors[constructorIterate++].setComment(comments[i]);
                     } else {
                         constructorIterate++;
                     }
                 } else {
-                    constructors[constructorIterate] = new Method(name, new Attribute[0], "", "");
+                    constructors[constructorIterate] = new Method(name, new Attribute[0], "", access);
                     if (comments[i] != null) {
                         methods[constructorIterate++].setComment(comments[i]);
                     } else {
