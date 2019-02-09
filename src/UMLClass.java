@@ -38,10 +38,10 @@ public class UMLClass {
         this.constructors = constructors;
     }
 
-    public String toJavaCode() {
+    public String toJavaCode(String softtabstop, String style) {
+        
         StringBuilder a = new StringBuilder();
-        String softtabstop = "    ";
-        a.append("class ").append(name).append(" {").append(System.lineSeparator());
+        a.append("class ").append(name).append(style).append("{").append(System.lineSeparator());
         for(Attribute attrib: attributes) {
             if(attrib!=null) {
                 a.append(softtabstop);
@@ -67,7 +67,7 @@ public class UMLClass {
                         a.append(", ");
                     }
                 }
-                a.append(") {").append(constructor.getComment()).append(System.lineSeparator()).append(softtabstop).append("}").append(System.lineSeparator());
+                a.append(")").append(style).append("{").append(constructor.getComment()).append(System.lineSeparator()).append(softtabstop).append("}").append(System.lineSeparator());
             }
         }
         a.append(System.lineSeparator());
@@ -80,10 +80,16 @@ public class UMLClass {
                         a.append(", ");
                     }
                 }
-                a.append(") {").append(method.getComment()).append(System.lineSeparator()).append(softtabstop).append("}").append(System.lineSeparator());
+                a.append(")").append(style).append("{").append(method.getComment()).append(System.lineSeparator()).append(softtabstop).append("}").append(System.lineSeparator());
             }
         }
         a.append("}");
         return a.toString();
+    }
+
+    public String toJavaCode() {
+        String softtabstop = "    ";
+        String style = " ";
+        return toJavaCode(softtabstop, style);
     }
 }
