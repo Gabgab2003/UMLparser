@@ -1,5 +1,3 @@
-import java.io.*;
-
 public class Parser {
     public UMLClass parse(String umlStr) {
         UMLClass umlClass = new UMLClass();
@@ -152,7 +150,7 @@ public class Parser {
         }
         umlClass.setAttributes(attributes);
         umlClass.setMethods(methods);
-        umlClass.setConstrucors(constructors);
+        umlClass.setConstructors(constructors);
         return umlClass;
     }
 }

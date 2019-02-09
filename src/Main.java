@@ -1,13 +1,13 @@
 import java.io.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         Parser parser = new Parser();
         String input = "", output = "";
-        if(args.length < 1) {
+        if (args.length < 1) {
             System.out.println("At least one Argument (InputFile)");
             return;
-        } else if(args.length < 2) {
+        } else if (args.length < 2) {
             input = args[0];
         } else {
             input = args[0];
@@ -17,7 +17,7 @@ public class Main {
         String line;
         StringBuilder in = new StringBuilder();
         //read
-        while((line=br.readLine())!=null)
+        while ((line = br.readLine()) != null)
             in.append(line).append(System.lineSeparator());
         UMLClass umlC = parser.parse(in.toString());
         String out = umlC.toJavaCode();

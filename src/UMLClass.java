@@ -2,7 +2,7 @@ public class UMLClass {
     private String name;
     private Attribute[] attributes = new Attribute[0];
     private Method[] methods = new Method[0];
-    private Method[] construcors = new Method[0];
+    private Method[] constructors = new Method[0];
     UMLClass(String name, Attribute[] attributes, Method[] methods) {
         this.name = name;
         this.attributes = attributes;
@@ -34,41 +34,8 @@ public class UMLClass {
         this.methods = methods;
     }
 
-    public void setConstrucors(Method[] construcors) {
-        this.construcors = construcors;
-    }
-
-    public void print() {
-        StringBuilder a = new StringBuilder();
-        a.append("Name: ").append(name).append(System.lineSeparator()).append(System.lineSeparator());
-        for(Attribute attrib: attributes) {
-            if(attrib!=null) {
-                a.append(attrib.getType()).append(" ").append(attrib.getName());
-                if(!(attrib.getDefaultLiteral().equals(""))) {
-                    a.append("=").append(attrib.getDefaultLiteral());
-                }
-                a.append(System.lineSeparator());
-            }
-        }
-        a.append(System.lineSeparator());
-        for(Method constructor: construcors) {
-            if(constructor!=null) {
-                a.append(constructor.getName()).append(System.lineSeparator());
-                for(Attribute arg: constructor.getArgs()) {
-                    a.append("\t").append(arg.getType()).append(" ").append(arg.getName()).append(System.lineSeparator());
-                }
-            }
-        }
-        a.append(System.lineSeparator());
-        for(Method method: methods) {
-            if(method!=null) {
-                a.append(method.getType()).append(" ").append(method.getName()).append(System.lineSeparator());
-                for(Attribute arg: method.getArgs()) {
-                    a.append("\t").append(arg.getType()).append(" ").append(arg.getName()).append(System.lineSeparator());
-                }
-            }
-        }
-        System.out.println(a);
+    public void setConstructors(Method[] constructors) {
+        this.constructors = constructors;
     }
 
     public String toJavaCode() {
@@ -82,22 +49,25 @@ public class UMLClass {
                 if(!(attrib.getDefaultLiteral().equals(""))) {
                     a.append("=").append(attrib.getDefaultLiteral());
                 }
-                a.append(";").append(System.lineSeparator());
+                a.append(";").append(attrib.getComment()).append(System.lineSeparator());
             }
         }
         a.append(System.lineSeparator());
 
-        for(Method constructor: construcors) {
+        for(Method constructor: constructors) {
             if(constructor!=null) {
                 a.append(softtabstop);
-                a.append(constructor.getAccess()).append(" ").append(constructor.getName()).append("(");
+                if(!(constructor.getAccess().equals(""))) {
+                    a.append(constructor.getAccess()).append(" ");
+                }
+                a.append(constructor.getName()).append("(");
                 for(int i=0;i<constructor.getArgs().length;i++) {
                     a.append(constructor.getArgs()[0].getType()).append(" ").append(constructor.getArgs()[0].getName());
                     if(i < constructor.getArgs().length-1) {
                         a.append(", ");
                     }
                 }
-                a.append(") {").append(System.lineSeparator()).append(softtabstop).append("}").append(System.lineSeparator());
+                a.append(") {").append(constructor.getComment()).append(System.lineSeparator()).append(softtabstop).append("}").append(System.lineSeparator());
             }
         }
         a.append(System.lineSeparator());
@@ -110,7 +80,7 @@ public class UMLClass {
                         a.append(", ");
                     }
                 }
-                a.append(") {").append(System.lineSeparator()).append(softtabstop).append("}").append(System.lineSeparator());
+                a.append(") {").append(method.getComment()).append(System.lineSeparator()).append(softtabstop).append("}").append(System.lineSeparator());
             }
         }
         a.append("}");

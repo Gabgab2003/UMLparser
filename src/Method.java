@@ -35,4 +35,8 @@ public class Method {
     public String getAccess() {
         return access;
     }
+
+    public String getComment() {
+        return comment;
+    }
 }
